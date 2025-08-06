@@ -1,0 +1,37 @@
+{
+  "name": "Alex Ferraro - UGC Creator",
+  "short_name": "Alex UGC",
+  "description": "Professional UGC creator specializing in men's care, tech, and fashion content. Authentic UGC videos that convert.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "keywords": [
+    "UGC creator",
+    "UGC men",
+    "user generated content",
+    "men's care UGC",
+    "tech UGC",
+    "fashion UGC",
+    "Alex Ferraro"
+  ],
+  "categories": ["business", "marketing", "social"]
+}
