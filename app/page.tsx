@@ -851,7 +851,7 @@ export default function UGCPortfolio() {
             <div className="grid lg:grid-cols-3 gap-12 items-stretch">
               {[
                 {
-                  title: "FLIRT PACKAGE",
+                  title: "STARTER",
                   description: "Quick & Simple",
                   price: "$60",
                   features: [
@@ -865,7 +865,7 @@ export default function UGCPortfolio() {
                   popular: false,
                 },
                 {
-                  title: "GLOW PACKAGE",
+                  title: "PRO",
                   description: "Engaging & Eye-Catching",
                   price: "$80",
                   features: [
@@ -881,7 +881,7 @@ export default function UGCPortfolio() {
                   popular: true,
                 },
                 {
-                  title: "ICON PACKAGE",
+                  title: "ELITE",
                   description: "Impactful & Strategic",
                   price: "$100",
                   features: [
@@ -1001,7 +1001,7 @@ export default function UGCPortfolio() {
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-black/5">
                 <div className="text-center space-y-4">
                   <h3 className="text-xl font-bold">Product Photography</h3>
-                  <div className="text-3xl font-black">Free</div>
+                  <div className="text-3xl font-black">$20</div>
                   <div className="text-sm text-black/60">for 4 photos</div>
                 </div>
               </div>
@@ -1051,7 +1051,7 @@ export default function UGCPortfolio() {
               <div className="bg-black/5 rounded-2xl p-8">
                 <h3 className="text-2xl font-bold mb-4">Starter Discount</h3>
                 <p className="text-lg">
-                  <span className="font-bold">$50</span> for 1 Video Flirt
+                  <span className="font-bold">$50</span> for 1 Video Starter
                   Package + 4 product photos
                 </p>
               </div>
