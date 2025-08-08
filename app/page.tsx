@@ -1093,17 +1093,20 @@ export default function UGCPortfolio() {
                 </div>
 
                 <div className="space-y-8">
-                  <div className="flex items-center space-x-6">
+                  <Link
+                    href="mailto:info@alexmakesugc.com"
+                    className="flex items-center space-x-6 hover:opacity-80 transition-opacity"
+                  >
                     <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center">
                       <Mail className="w-5 h-5" />
                     </div>
                     <div>
                       <div className="font-semibold text-lg">
-                        UGCWITHALEX1@GMAIL.COM
+                        info@alexmakesugc.com
                       </div>
                       <div className="text-white/60">Email me directly</div>
                     </div>
-                  </div>
+                  </Link>
                   <Link
                     href="https://wa.me/393398513143"
                     target="_blank"
