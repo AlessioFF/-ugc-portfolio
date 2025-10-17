@@ -991,46 +991,92 @@ export default function UGCPortfolio() {
                 {
                   title: "STARTER",
                   description: "Quick & Simple",
-                  price: "$60",
-                  features: [
-                    "1 UGC Video (up to 30 seconds)",
-                    "Edited for Instagram/Tiktok/Youtube",
-                    "3-day delivery",
-                    "1 revision",
-                    "1 high-quality thumbnail photo",
-                    "Organic Social Media Usage: indefinite",
+                  price: "€60",
+                  sections: [
+                    {
+                      title: "Included",
+                      items: [
+                        "1 UGC Video (up to 30 seconds)",
+                        "1 revision included",
+                        "2 days delivery",
+                        "Raw footage",
+                        "Voice over",
+                      ],
+                    },
+                    {
+                      title: "Formats",
+                      items: ["Vertical (TikTok, Instagram)"],
+                    },
+                    {
+                      title: "Broadcasts",
+                      items: [
+                        "Rights transferred for 3 months",
+                        "Organic broadcasting",
+                        "Social networks, websites, ...",
+                      ],
+                    },
                   ],
                   popular: false,
                 },
                 {
                   title: "PRO",
                   description: "Engaging & Eye-Catching",
-                  price: "$80",
-                  features: [
-                    "1 UGC Video (up to 60 seconds)",
-                    "Edited for Instagram/Tiktok/Youtube",
-                    "3-day delivery",
-                    "2 revisions",
-                    "1 high-quality thumbnail photo",
-                    "Organic Social Media Usage: indefinite",
-                    "Paid Ads Usage: 3 months",
-                    "Website Usage: 4 months",
+                  price: "€90",
+                  sections: [
+                    {
+                      title: "Included",
+                      items: [
+                        "1 UGC Video (up to 60 seconds)",
+                        "2 revisions included",
+                        "3 days delivery",
+                        "Raw footage",
+                        "Voice over",
+                        "1 thumbnail",
+                        "Rights transferred for 3 months",
+                      ],
+                    },
+                    {
+                      title: "Formats",
+                      items: ["Vertical (TikTok, Instagram)"],
+                    },
+                    {
+                      title: "Broadcasts",
+                      items: [
+                        "Ads broadcasting",
+                        "Instagram, Tiktok, Google, ...",
+                      ],
+                    },
                   ],
                   popular: true,
                 },
                 {
                   title: "ELITE",
                   description: "Impactful & Strategic",
-                  price: "$100",
-                  features: [
-                    "1 UGC Video (up to 120 seconds)",
-                    "Edited for Instagram/Tiktok/Youtube",
-                    "3-day delivery",
-                    "3 revisions",
-                    "2 high-quality thumbnail photos",
-                    "Organic Social Media Usage: indefinite",
-                    "Paid Ads Usage: 12 months",
-                    "Website Usage: 12 months",
+                  price: "€120",
+                  sections: [
+                    {
+                      title: "Included",
+                      items: [
+                        "1 UGC Video (up to 60 seconds)",
+                        "2 revisions included",
+                        "3 days delivery",
+                        "Raw footage",
+                        "Voice over",
+                        "2 thumbnails",
+                        "Rights transferred for 6 months",
+                      ],
+                    },
+                    {
+                      title: "Formats",
+                      items: ["Vertical (TikTok, Instagram)"],
+                    },
+                    {
+                      title: "Broadcasts",
+                      items: [
+                        "Ads broadcasting",
+                        "Instagram, Tiktok, Google, ...",
+                      ],
+                    },
                   ],
                   popular: false,
                 },
@@ -1071,27 +1117,42 @@ export default function UGCPortfolio() {
                         <div className="text-5xl font-black">
                           {service.price}
                         </div>
-                        <div
-                          className={`text-sm font-medium ${
-                            service.popular ? "text-white/60" : "text-black/60"
-                          }`}
-                        >
-                          per project
-                        </div>
                       </div>
 
-                      <ul className="space-y-4">
-                        {service.features.map((feature, idx) => (
-                          <li key={idx} className="flex items-start space-x-3">
+                      <div className="space-y-6">
+                        {service.sections.map((section, sIdx) => (
+                          <div key={sIdx}>
                             <div
-                              className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
-                                service.popular ? "bg-white" : "bg-black"
+                              className={`text-sm font-semibold uppercase tracking-wide mb-2 ${
+                                service.popular
+                                  ? "text-white/60"
+                                  : "text-black/60"
                               }`}
-                            ></div>
-                            <span className="font-medium">{feature}</span>
-                          </li>
+                            >
+                              {section.title}
+                            </div>
+                            <ul className="space-y-3">
+                              {section.items.map(
+                                (item: string, iIdx: number) => (
+                                  <li
+                                    key={iIdx}
+                                    className="flex items-start space-x-3"
+                                  >
+                                    <div
+                                      className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                                        service.popular
+                                          ? "bg-white"
+                                          : "bg-black"
+                                      }`}
+                                    ></div>
+                                    <span className="font-medium">{item}</span>
+                                  </li>
+                                )
+                              )}
+                            </ul>
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     </div>
 
                     <Button
@@ -1112,50 +1173,59 @@ export default function UGCPortfolio() {
         </section>
 
         {/* Add-Ons Section */}
-        <section className="pt-28 pb-40 bg-[#fafafa]">
+        <section className="pt-16 pb-20 bg-[#fafafa]">
           <div className="max-w-8xl mx-auto px-6 lg:px-12">
-            <div className="text-center mb-24">
+            <div className="text-center mb-12">
               <h2 className="text-[3rem] lg:text-[4rem] font-black leading-[0.9] tracking-tight mb-4">
                 ADD-ONS
               </h2>
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-8 mb-20">
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-black/5">
-                <div className="text-center space-y-4">
-                  <h3 className="text-xl font-bold">Extra-fast delivery</h3>
-                  <div className="text-3xl font-black">$30</div>
+            <div className="flex justify-center gap-4 mb-8">
+              {[
+                {
+                  title: "Editing",
+                  price: "€20",
+                },
+                {
+                  title: "Fast Delivery",
+                  price: "€15",
+                },
+                {
+                  title: "Additional Hooks",
+                  price: "€15",
+                },
+                {
+                  title: "Additional Revision",
+                  price: "€10",
+                  note: "/ 2 days",
+                },
+                {
+                  title: "Product Photography",
+                  price: "€20",
+                  note: "for 4 photos",
+                },
+              ].map((addon, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-2xl shadow-lg border border-black/5 hover:scale-105 transition-transform"
+                  style={{ width: "192px", height: "192px" }}
+                >
+                  <div className="h-full flex flex-col items-center p-6">
+                    <div className="h-16 flex items-start justify-center pt-2">
+                      <h3 className="text-lg font-bold">{addon.title}</h3>
+                    </div>
+                    <div className="flex-1 flex flex-col items-center justify-center -mt-4">
+                      <div className="text-3xl font-black">{addon.price}</div>
+                      {addon.note && (
+                        <div className="text-xs text-black/60 mt-2">
+                          {addon.note}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-black/5">
-                <div className="text-center space-y-4">
-                  <h3 className="text-xl font-bold">Additional Revision</h3>
-                  <div className="text-3xl font-black">$40</div>
-                  <div className="text-sm text-black/60">/ 2 days</div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-black/5">
-                <div className="text-center space-y-4">
-                  <h3 className="text-xl font-bold">Product Photography</h3>
-                  <div className="text-3xl font-black">$20</div>
-                  <div className="text-sm text-black/60">for 4 photos</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-black/5 text-center">
-              <p className="text-lg italic text-black/70">
-                <span className="font-bold">Quick fact:</span> Posts featuring
-                dogs get <span className="font-bold">up to 69%</span> more
-                engagement on Instagram compared to those without; TikToks and
-                Reels that feature pets—especially cute, well-behaved dogs—see{" "}
-                <span className="font-bold">up to 2x</span> longer average view
-                duration; UGC with dogs is{" "}
-                <span className="font-bold">3x more</span> likely to be shared
-                than similar content without pets
-              </p>
+              ))}
             </div>
           </div>
         </section>
