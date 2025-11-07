@@ -183,6 +183,25 @@ export default function UGCPortfolio() {
     },
   ];
 
+  const featuredVideos = [
+    {
+      videoUrl: "/kang.it_definitivo.mp4",
+      title: "Cartomanzia & Tarocchi",
+      brand: "Kang.it",
+      category: "LIFESTYLE UGC",
+      poster: "/Kang.it_Thumbnail.jpg",
+      language: "IT",
+    },
+    {
+      videoUrl: "/chicken-reel.mp4",
+      title: "Chicken Reel",
+      brand: "Chicken Road 2",
+      category: "GAMING UGC",
+      poster: "/chicken-reel.cover.jpg",
+      language: "IT",
+    },
+  ];
+
   const otherVideos = [
     {
       videoUrl: "/Ale - Morning skin routine.mp4",
@@ -868,9 +887,104 @@ export default function UGCPortfolio() {
                 })}
               </div>
 
+              {/* Featured Videos - Kang.it & Chicken Road 2 */}
+              <div className="flex justify-center gap-8 mb-12 flex-wrap">
+                {featuredVideos.map((video, index) => {
+                  const globalIndex = introVideos.length + index;
+                  return (
+                    <article
+                      key={`featured-${index}`}
+                      className="group cursor-pointer max-w-xs mx-auto"
+                    >
+                      <div className="relative aspect-[9/16] bg-black rounded-3xl overflow-hidden mb-6 group-hover:scale-[1.02] transition-transform duration-500">
+                        <video
+                          ref={(el) => {
+                            if (el) videoRefs.current[globalIndex] = el;
+                          }}
+                          src={video.videoUrl}
+                          poster={(video as any).poster}
+                          className="w-full h-full object-cover"
+                          playsInline
+                          onEnded={() => setPlayingVideo(null)}
+                          onTimeUpdate={() => handleTimeUpdate(globalIndex)}
+                          aria-label={`${video.title} UGC video for ${
+                            video.brand
+                          } [${(video as any).language}]`}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                        <div
+                          className="absolute inset-0 flex items-center justify-center transition-opacity duration-300"
+                          onClick={() => handlePlayPauseClick(globalIndex)}
+                        >
+                          {playingVideo !== globalIndex ? (
+                            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-100 group-hover:opacity-100">
+                              <Play
+                                className="w-8 h-8 text-white ml-1"
+                                aria-hidden="true"
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-20 h-20 flex items-center justify-center opacity-0">
+                              <Pause
+                                className="w-8 h-8 text-white"
+                                aria-hidden="true"
+                              />
+                            </div>
+                          )}
+                        </div>
+                        {playingVideo === globalIndex && (
+                          <div
+                            ref={(el) => {
+                              progressBarRefs.current[globalIndex] = el;
+                            }}
+                            className="absolute bottom-2 left-4 right-4 h-6 cursor-pointer"
+                            onMouseDown={(e) => handleMouseDown(e, globalIndex)}
+                          >
+                            <div className="relative flex h-full w-full items-center">
+                              <div className="h-1.5 w-full rounded-full bg-white/30">
+                                <div
+                                  className="relative h-full rounded-full bg-white"
+                                  style={{ width: `${videoProgress}%` }}
+                                >
+                                  <div className="absolute right-0 top-1/2 h-3.5 w-3.5 -translate-y-1/2 translate-x-1/2 rounded-full bg-white shadow-lg"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        <div className="absolute top-6 left-6">
+                          <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 font-medium">
+                            {video.category}
+                          </Badge>
+                        </div>
+                        <div className="absolute top-6 right-6">
+                          <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 font-medium flex items-center gap-2">
+                            <span className="text-lg">
+                              {(video as any).language === "IT" ? "🇮🇹" : "🇬🇧"}
+                            </span>
+                            {(video as any).language}
+                          </Badge>
+                        </div>
+                        <div className="absolute bottom-6 left-6 right-6">
+                          <div className="text-white">
+                            <div className="font-semibold text-lg">
+                              {video.title}
+                            </div>
+                            <div className="text-sm opacity-80">
+                              {video.brand}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+
               <div className="grid lg:grid-cols-3 gap-8">
                 {otherVideos.map((video, index) => {
-                  const globalIndex = introVideos.length + index;
+                  const globalIndex =
+                    introVideos.length + featuredVideos.length + index;
                   return (
                     <article
                       key={`other-${index}`}
