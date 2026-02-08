@@ -185,8 +185,24 @@ export default function UGCPortfolio() {
 
   const featuredVideos = [
     {
+      videoUrl: "/MyFxBook-Ugc.mp4",
+      title: "Trading & Finance",
+      brand: "MyFxBook",
+      category: "FINANCE UGC",
+      poster: "/MyFxBookCover.jpg",
+      language: "IT",
+    },
+    {
+      videoUrl: "/FrenchMush Italia.mp4",
+      title: "Mushroom Coffee",
+      brand: "FrenchMush Italia",
+      category: "FOOD AND DRINKS UGC",
+      poster: "/FrenchMushCover.jpg",
+      language: "IT",
+    },
+    {
       videoUrl: "/kang.it_definitivo.mp4",
-      title: "Cartomanzia & Tarocchi",
+      title: "Cartomancy & Tarot",
       brand: "Kang.it",
       category: "LIFESTYLE UGC",
       poster: "/Kang.it_Thumbnail.jpg",
