@@ -185,7 +185,7 @@ export default function UGCPortfolio() {
 
   const featuredVideos = [
     {
-      videoUrl: "/MyFxBook-Ugc.mp4",
+      videoUrl: "/MyFxBook-UgcVideo.mp4",
       title: "Trading & Finance",
       brand: "MyFxBook",
       category: "FINANCE UGC",
@@ -193,7 +193,7 @@ export default function UGCPortfolio() {
       language: "IT",
     },
     {
-      videoUrl: "/FrenchMush Italia.mp4",
+      videoUrl: "/FrenchMushvideo.mp4",
       title: "Mushroom Coffee",
       brand: "FrenchMush Italia",
       category: "FOOD AND DRINKS UGC",
