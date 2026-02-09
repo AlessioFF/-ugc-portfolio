@@ -847,7 +847,7 @@ export default function UGCPortfolio() {
                           }}
                           src={video.videoUrl}
                           poster={(video as any).poster}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover pointer-events-none"
                           playsInline
                           preload="metadata"
                           onEnded={() => setPlayingVideo(null)}
@@ -856,9 +856,9 @@ export default function UGCPortfolio() {
                             video.brand
                           } [${(video as any).language}]`}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+                        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
                         <div
-                          className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 cursor-pointer"
+                          className="absolute inset-0 z-20 flex items-center justify-center transition-opacity duration-300 cursor-pointer"
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
@@ -886,7 +886,7 @@ export default function UGCPortfolio() {
                             ref={(el) => {
                               progressBarRefs.current[globalIndex] = el;
                             }}
-                            className="absolute bottom-2 left-4 right-4 h-6 cursor-pointer"
+                            className="absolute bottom-2 left-4 right-4 h-6 z-20 cursor-pointer"
                             onMouseDown={(e) => handleMouseDown(e, globalIndex)}
                           >
                             <div className="relative flex h-full w-full items-center">
@@ -901,12 +901,12 @@ export default function UGCPortfolio() {
                             </div>
                           </div>
                         )}
-                        <div className="absolute top-6 left-6 pointer-events-none">
+                        <div className="absolute top-6 left-6 z-10 pointer-events-none">
                           <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 font-medium">
                             {video.category}
                           </Badge>
                         </div>
-                        <div className="absolute top-6 right-6 pointer-events-none">
+                        <div className="absolute top-6 right-6 z-10 pointer-events-none">
                           <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 font-medium flex items-center gap-2">
                             <span className="text-lg">
                               {(video as any).language === "IT" ? "🇮🇹" : "🇬🇧"}
@@ -914,7 +914,7 @@ export default function UGCPortfolio() {
                             {(video as any).language}
                           </Badge>
                         </div>
-                        <div className="absolute bottom-6 left-6 right-6 pointer-events-none">
+                        <div className="absolute bottom-6 left-6 right-6 z-10 pointer-events-none">
                           <div className="text-white">
                             <div className="font-semibold text-lg">
                               {video.title}
@@ -946,7 +946,7 @@ export default function UGCPortfolio() {
                           }}
                           src={video.videoUrl}
                           poster={(video as any).poster}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover pointer-events-none"
                           playsInline
                           preload="metadata"
                           onEnded={() => setPlayingVideo(null)}
@@ -955,9 +955,9 @@ export default function UGCPortfolio() {
                             video.brand
                           } [${(video as any).language}]`}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+                        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
                         <div
-                          className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 cursor-pointer"
+                          className="absolute inset-0 z-20 flex items-center justify-center transition-opacity duration-300 cursor-pointer"
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
@@ -985,7 +985,7 @@ export default function UGCPortfolio() {
                             ref={(el) => {
                               progressBarRefs.current[globalIndex] = el;
                             }}
-                            className="absolute bottom-2 left-4 right-4 h-6 cursor-pointer"
+                            className="absolute bottom-2 left-4 right-4 h-6 z-20 cursor-pointer"
                             onMouseDown={(e) => handleMouseDown(e, globalIndex)}
                           >
                             <div className="relative flex h-full w-full items-center">
@@ -1000,12 +1000,12 @@ export default function UGCPortfolio() {
                             </div>
                           </div>
                         )}
-                        <div className="absolute top-6 left-6 pointer-events-none">
+                        <div className="absolute top-6 left-6 z-10 pointer-events-none">
                           <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 font-medium">
                             {video.category}
                           </Badge>
                         </div>
-                        <div className="absolute top-6 right-6 pointer-events-none">
+                        <div className="absolute top-6 right-6 z-10 pointer-events-none">
                           <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 font-medium flex items-center gap-2">
                             <span className="text-lg">
                               {(video as any).language === "IT" ? "🇮🇹" : "🇬🇧"}
@@ -1013,7 +1013,7 @@ export default function UGCPortfolio() {
                             {(video as any).language}
                           </Badge>
                         </div>
-                        <div className="absolute bottom-6 left-6 right-6 pointer-events-none">
+                        <div className="absolute bottom-6 left-6 right-6 z-10 pointer-events-none">
                           <div className="text-white">
                             <div className="font-semibold text-lg">
                               {video.title}
@@ -1045,7 +1045,7 @@ export default function UGCPortfolio() {
                           }}
                           src={video.videoUrl}
                           poster={(video as any).poster}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover pointer-events-none"
                           playsInline
                           preload="metadata"
                           onEnded={() => setPlayingVideo(null)}
@@ -1054,9 +1054,9 @@ export default function UGCPortfolio() {
                             video.brand
                           } [${(video as any).language}]`}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+                        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
                         <div
-                          className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 cursor-pointer"
+                          className="absolute inset-0 z-20 flex items-center justify-center transition-opacity duration-300 cursor-pointer"
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
@@ -1084,7 +1084,7 @@ export default function UGCPortfolio() {
                             ref={(el) => {
                               progressBarRefs.current[globalIndex] = el;
                             }}
-                            className="absolute bottom-2 left-4 right-4 h-6 cursor-pointer"
+                            className="absolute bottom-2 left-4 right-4 h-6 z-20 cursor-pointer"
                             onMouseDown={(e) => handleMouseDown(e, globalIndex)}
                           >
                             <div className="relative flex h-full w-full items-center">
@@ -1099,12 +1099,12 @@ export default function UGCPortfolio() {
                             </div>
                           </div>
                         )}
-                        <div className="absolute top-6 left-6 pointer-events-none">
+                        <div className="absolute top-6 left-6 z-10 pointer-events-none">
                           <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 font-medium">
                             {video.category}
                           </Badge>
                         </div>
-                        <div className="absolute top-6 right-6 pointer-events-none">
+                        <div className="absolute top-6 right-6 z-10 pointer-events-none">
                           <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 font-medium flex items-center gap-2">
                             <span className="text-lg">
                               {(video as any).language === "IT" ? "🇮🇹" : "🇬🇧"}
@@ -1112,7 +1112,7 @@ export default function UGCPortfolio() {
                             {(video as any).language}
                           </Badge>
                         </div>
-                        <div className="absolute bottom-6 left-6 right-6 pointer-events-none">
+                        <div className="absolute bottom-6 left-6 right-6 z-10 pointer-events-none">
                           <div className="text-white">
                             <div className="font-semibold text-lg">
                               {video.title}
