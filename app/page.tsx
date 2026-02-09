@@ -95,8 +95,11 @@ export default function UGCPortfolio() {
     }
   };
 
-  const handlePlayPauseClick = (index: number) => {
-    const video = videoRefs.current[index];
+  const handlePlayPauseClick = (index: number, videoEl?: HTMLVideoElement | null) => {
+    // Usa l'elemento passato dal click (dal DOM) oppure il ref, e aggiorna il ref
+    const video = videoEl ?? videoRefs.current[index];
+    if (video) videoRefs.current[index] = video;
+
     if (playingVideo === index) {
       video?.pause();
       setPlayingVideo(null);
@@ -110,7 +113,6 @@ export default function UGCPortfolio() {
           if (p !== undefined && typeof p.then === "function") {
             p.then(() => setPlayingVideo(index)).catch(() => {
               setPlayingVideo(null);
-              // Riprova quando il video è pronto (es. dopo caricamento LFS)
               const onCanPlay = () => {
                 video.removeEventListener("canplay", onCanPlay);
                 video.play().then(() => setPlayingVideo(index)).catch(() => setPlayingVideo(null));
@@ -862,7 +864,9 @@ export default function UGCPortfolio() {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            handlePlayPauseClick(globalIndex);
+                            const card = e.currentTarget.closest("article");
+                            const video = card?.querySelector("video");
+                            handlePlayPauseClick(globalIndex, video ?? undefined);
                           }}
                         >
                           {playingVideo !== globalIndex ? (
@@ -961,7 +965,9 @@ export default function UGCPortfolio() {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            handlePlayPauseClick(globalIndex);
+                            const card = e.currentTarget.closest("article");
+                            const video = card?.querySelector("video");
+                            handlePlayPauseClick(globalIndex, video ?? undefined);
                           }}
                         >
                           {playingVideo !== globalIndex ? (
@@ -1060,7 +1066,9 @@ export default function UGCPortfolio() {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            handlePlayPauseClick(globalIndex);
+                            const card = e.currentTarget.closest("article");
+                            const video = card?.querySelector("video");
+                            handlePlayPauseClick(globalIndex, video ?? undefined);
                           }}
                         >
                           {playingVideo !== globalIndex ? (
