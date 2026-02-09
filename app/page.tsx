@@ -96,17 +96,39 @@ export default function UGCPortfolio() {
   };
 
   const handlePlayPauseClick = (index: number) => {
+    const video = videoRefs.current[index];
     if (playingVideo === index) {
-      videoRefs.current[index]?.pause();
+      video?.pause();
       setPlayingVideo(null);
     } else {
-      videoRefs.current.forEach((video, i) => {
-        if (i !== index && video) {
-          video.pause();
-        }
+      videoRefs.current.forEach((v, i) => {
+        if (i !== index && v) v.pause();
       });
-      videoRefs.current[index]?.play();
-      setPlayingVideo(index);
+      if (video) {
+        const doPlay = () => {
+          const p = video.play();
+          if (p !== undefined && typeof p.then === "function") {
+            p.then(() => setPlayingVideo(index)).catch(() => {
+              setPlayingVideo(null);
+              // Riprova quando il video è pronto (es. dopo caricamento LFS)
+              const onCanPlay = () => {
+                video.removeEventListener("canplay", onCanPlay);
+                video.play().then(() => setPlayingVideo(index)).catch(() => setPlayingVideo(null));
+              };
+              video.addEventListener("canplay", onCanPlay);
+              if (video.readyState < 2) video.load();
+            });
+          } else {
+            setPlayingVideo(index);
+          }
+        };
+        if (video.readyState < 2) {
+          video.load();
+          video.addEventListener("canplay", doPlay, { once: true });
+        } else {
+          doPlay();
+        }
+      }
     }
   };
 
@@ -821,32 +843,37 @@ export default function UGCPortfolio() {
                       <div className="relative aspect-[9/16] bg-black rounded-3xl overflow-hidden mb-6 group-hover:scale-[1.02] transition-transform duration-500">
                         <video
                           ref={(el) => {
-                            if (el) videoRefs.current[globalIndex] = el;
+                            videoRefs.current[globalIndex] = el;
                           }}
                           src={video.videoUrl}
                           poster={(video as any).poster}
                           className="w-full h-full object-cover"
                           playsInline
+                          preload="metadata"
                           onEnded={() => setPlayingVideo(null)}
                           onTimeUpdate={() => handleTimeUpdate(globalIndex)}
                           aria-label={`${video.title} UGC video for ${
                             video.brand
                           } [${(video as any).language}]`}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
                         <div
-                          className="absolute inset-0 flex items-center justify-center transition-opacity duration-300"
-                          onClick={() => handlePlayPauseClick(globalIndex)}
+                          className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 cursor-pointer"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handlePlayPauseClick(globalIndex);
+                          }}
                         >
                           {playingVideo !== globalIndex ? (
-                            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-100 group-hover:opacity-100">
+                            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-100 group-hover:opacity-100 pointer-events-none">
                               <Play
                                 className="w-8 h-8 text-white ml-1"
                                 aria-hidden="true"
                               />
                             </div>
                           ) : (
-                            <div className="w-20 h-20 flex items-center justify-center opacity-0">
+                            <div className="w-20 h-20 flex items-center justify-center opacity-0 pointer-events-none">
                               <Pause
                                 className="w-8 h-8 text-white"
                                 aria-hidden="true"
@@ -874,12 +901,12 @@ export default function UGCPortfolio() {
                             </div>
                           </div>
                         )}
-                        <div className="absolute top-6 left-6">
+                        <div className="absolute top-6 left-6 pointer-events-none">
                           <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 font-medium">
                             {video.category}
                           </Badge>
                         </div>
-                        <div className="absolute top-6 right-6">
+                        <div className="absolute top-6 right-6 pointer-events-none">
                           <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 font-medium flex items-center gap-2">
                             <span className="text-lg">
                               {(video as any).language === "IT" ? "🇮🇹" : "🇬🇧"}
@@ -887,7 +914,7 @@ export default function UGCPortfolio() {
                             {(video as any).language}
                           </Badge>
                         </div>
-                        <div className="absolute bottom-6 left-6 right-6">
+                        <div className="absolute bottom-6 left-6 right-6 pointer-events-none">
                           <div className="text-white">
                             <div className="font-semibold text-lg">
                               {video.title}
@@ -915,32 +942,37 @@ export default function UGCPortfolio() {
                       <div className="relative aspect-[9/16] bg-black rounded-3xl overflow-hidden mb-6 group-hover:scale-[1.02] transition-transform duration-500">
                         <video
                           ref={(el) => {
-                            if (el) videoRefs.current[globalIndex] = el;
+                            videoRefs.current[globalIndex] = el;
                           }}
                           src={video.videoUrl}
                           poster={(video as any).poster}
                           className="w-full h-full object-cover"
                           playsInline
+                          preload="metadata"
                           onEnded={() => setPlayingVideo(null)}
                           onTimeUpdate={() => handleTimeUpdate(globalIndex)}
                           aria-label={`${video.title} UGC video for ${
                             video.brand
                           } [${(video as any).language}]`}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
                         <div
-                          className="absolute inset-0 flex items-center justify-center transition-opacity duration-300"
-                          onClick={() => handlePlayPauseClick(globalIndex)}
+                          className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 cursor-pointer"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handlePlayPauseClick(globalIndex);
+                          }}
                         >
                           {playingVideo !== globalIndex ? (
-                            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-100 group-hover:opacity-100">
+                            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-100 group-hover:opacity-100 pointer-events-none">
                               <Play
                                 className="w-8 h-8 text-white ml-1"
                                 aria-hidden="true"
                               />
                             </div>
                           ) : (
-                            <div className="w-20 h-20 flex items-center justify-center opacity-0">
+                            <div className="w-20 h-20 flex items-center justify-center opacity-0 pointer-events-none">
                               <Pause
                                 className="w-8 h-8 text-white"
                                 aria-hidden="true"
@@ -968,12 +1000,12 @@ export default function UGCPortfolio() {
                             </div>
                           </div>
                         )}
-                        <div className="absolute top-6 left-6">
+                        <div className="absolute top-6 left-6 pointer-events-none">
                           <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 font-medium">
                             {video.category}
                           </Badge>
                         </div>
-                        <div className="absolute top-6 right-6">
+                        <div className="absolute top-6 right-6 pointer-events-none">
                           <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 font-medium flex items-center gap-2">
                             <span className="text-lg">
                               {(video as any).language === "IT" ? "🇮🇹" : "🇬🇧"}
@@ -981,7 +1013,7 @@ export default function UGCPortfolio() {
                             {(video as any).language}
                           </Badge>
                         </div>
-                        <div className="absolute bottom-6 left-6 right-6">
+                        <div className="absolute bottom-6 left-6 right-6 pointer-events-none">
                           <div className="text-white">
                             <div className="font-semibold text-lg">
                               {video.title}
@@ -1009,32 +1041,37 @@ export default function UGCPortfolio() {
                       <div className="relative aspect-[9/16] bg-black rounded-3xl overflow-hidden mb-6 group-hover:scale-[1.02] transition-transform duration-500">
                         <video
                           ref={(el) => {
-                            if (el) videoRefs.current[globalIndex] = el;
+                            videoRefs.current[globalIndex] = el;
                           }}
                           src={video.videoUrl}
                           poster={(video as any).poster}
                           className="w-full h-full object-cover"
                           playsInline
+                          preload="metadata"
                           onEnded={() => setPlayingVideo(null)}
                           onTimeUpdate={() => handleTimeUpdate(globalIndex)}
                           aria-label={`${video.title} UGC video for ${
                             video.brand
                           } [${(video as any).language}]`}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
                         <div
-                          className="absolute inset-0 flex items-center justify-center transition-opacity duration-300"
-                          onClick={() => handlePlayPauseClick(globalIndex)}
+                          className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 cursor-pointer"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handlePlayPauseClick(globalIndex);
+                          }}
                         >
                           {playingVideo !== globalIndex ? (
-                            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-100 group-hover:opacity-100">
+                            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-100 group-hover:opacity-100 pointer-events-none">
                               <Play
                                 className="w-8 h-8 text-white ml-1"
                                 aria-hidden="true"
                               />
                             </div>
                           ) : (
-                            <div className="w-20 h-20 flex items-center justify-center opacity-0">
+                            <div className="w-20 h-20 flex items-center justify-center opacity-0 pointer-events-none">
                               <Pause
                                 className="w-8 h-8 text-white"
                                 aria-hidden="true"
@@ -1062,12 +1099,12 @@ export default function UGCPortfolio() {
                             </div>
                           </div>
                         )}
-                        <div className="absolute top-6 left-6">
+                        <div className="absolute top-6 left-6 pointer-events-none">
                           <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 font-medium">
                             {video.category}
                           </Badge>
                         </div>
-                        <div className="absolute top-6 right-6">
+                        <div className="absolute top-6 right-6 pointer-events-none">
                           <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 font-medium flex items-center gap-2">
                             <span className="text-lg">
                               {(video as any).language === "IT" ? "🇮🇹" : "🇬🇧"}
@@ -1075,7 +1112,7 @@ export default function UGCPortfolio() {
                             {(video as any).language}
                           </Badge>
                         </div>
-                        <div className="absolute bottom-6 left-6 right-6">
+                        <div className="absolute bottom-6 left-6 right-6 pointer-events-none">
                           <div className="text-white">
                             <div className="font-semibold text-lg">
                               {video.title}
