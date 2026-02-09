@@ -96,7 +96,6 @@ export default function UGCPortfolio() {
   };
 
   const handlePlayPauseClick = (index: number, videoEl?: HTMLVideoElement | null) => {
-    // Usa l'elemento passato dal click (dal DOM) oppure il ref, e aggiorna il ref
     const video = videoEl ?? videoRefs.current[index];
     if (video) videoRefs.current[index] = video;
 
@@ -108,10 +107,16 @@ export default function UGCPortfolio() {
         if (i !== index && v) v.pause();
       });
       if (video) {
+        // Debug: verifica sorgente e stato (rimuovere dopo)
+        const src = video.src || video.getAttribute("src");
+        console.log("[Video play]", { index, src, readyState: video.readyState, error: video.error?.message });
+        if (video.error) console.warn("[Video error]", video.error.code, video.error.message);
+
         const doPlay = () => {
           const p = video.play();
           if (p !== undefined && typeof p.then === "function") {
-            p.then(() => setPlayingVideo(index)).catch(() => {
+            p.then(() => setPlayingVideo(index)).catch((err) => {
+              console.warn("[Video play rejected]", err?.message || err, "src:", video.src);
               setPlayingVideo(null);
               const onCanPlay = () => {
                 video.removeEventListener("canplay", onCanPlay);
@@ -853,6 +858,10 @@ export default function UGCPortfolio() {
                           playsInline
                           preload="metadata"
                           onEnded={() => setPlayingVideo(null)}
+                          onError={(e) => {
+                            const v = e.currentTarget;
+                            console.warn("[Video load error]", v.src, v.error?.code, v.error?.message);
+                          }}
                           onTimeUpdate={() => handleTimeUpdate(globalIndex)}
                           aria-label={`${video.title} UGC video for ${
                             video.brand
@@ -954,6 +963,10 @@ export default function UGCPortfolio() {
                           playsInline
                           preload="metadata"
                           onEnded={() => setPlayingVideo(null)}
+                          onError={(e) => {
+                            const v = e.currentTarget;
+                            console.warn("[Video load error]", v.src, v.error?.code, v.error?.message);
+                          }}
                           onTimeUpdate={() => handleTimeUpdate(globalIndex)}
                           aria-label={`${video.title} UGC video for ${
                             video.brand
@@ -1055,6 +1068,10 @@ export default function UGCPortfolio() {
                           playsInline
                           preload="metadata"
                           onEnded={() => setPlayingVideo(null)}
+                          onError={(e) => {
+                            const v = e.currentTarget;
+                            console.warn("[Video load error]", v.src, v.error?.code, v.error?.message);
+                          }}
                           onTimeUpdate={() => handleTimeUpdate(globalIndex)}
                           aria-label={`${video.title} UGC video for ${
                             video.brand
