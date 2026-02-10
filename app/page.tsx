@@ -22,6 +22,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 
+function getYoutubeId(url: string): string | null {
+  if (!url) return null;
+  try {
+    if (url.includes("youtube.com/watch")) return new URL(url).searchParams.get("v");
+    if (url.includes("youtu.be/")) return new URL(url).pathname.slice(1).split("?")[0] || null;
+    if (url.includes("youtube.com/embed/")) return new URL(url).pathname.split("/").pop() || null;
+    if (url.includes("youtube.com/shorts/")) return new URL(url).pathname.split("/").pop() || null;
+  } catch {}
+  return null;
+}
+
 export default function UGCPortfolio() {
   const [scrollY, setScrollY] = useState(0);
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -107,16 +118,10 @@ export default function UGCPortfolio() {
         if (i !== index && v) v.pause();
       });
       if (video) {
-        // Debug: verifica sorgente e stato (rimuovere dopo)
-        const src = video.src || video.getAttribute("src");
-        console.log("[Video play]", { index, src, readyState: video.readyState, error: video.error?.message });
-        if (video.error) console.warn("[Video error]", video.error.code, video.error.message);
-
         const doPlay = () => {
           const p = video.play();
           if (p !== undefined && typeof p.then === "function") {
-            p.then(() => setPlayingVideo(index)).catch((err) => {
-              console.warn("[Video play rejected]", err?.message || err, "src:", video.src);
+            p.then(() => setPlayingVideo(index)).catch(() => {
               setPlayingVideo(null);
               const onCanPlay = () => {
                 video.removeEventListener("canplay", onCanPlay);
@@ -214,7 +219,7 @@ export default function UGCPortfolio() {
 
   const featuredVideos = [
     {
-      videoUrl: "/MyFxBook-UgcVideo.mp4",
+      videoUrl: "https://youtube.com/shorts/ethOsF3WmuY?feature=share",
       title: "Trading & Finance",
       brand: "MyFxBook",
       category: "FINANCE UGC",
@@ -222,7 +227,7 @@ export default function UGCPortfolio() {
       language: "IT",
     },
     {
-      videoUrl: "/FrenchMushvideo.mp4",
+      videoUrl: "https://youtube.com/shorts/R6BWTsilm70?feature=share",
       title: "Mushroom Coffee",
       brand: "FrenchMush Italia",
       category: "FOOD AND DRINKS UGC",
@@ -858,10 +863,6 @@ export default function UGCPortfolio() {
                           playsInline
                           preload="metadata"
                           onEnded={() => setPlayingVideo(null)}
-                          onError={(e) => {
-                            const v = e.currentTarget;
-                            console.warn("[Video load error]", v.src, v.error?.code, v.error?.message);
-                          }}
                           onTimeUpdate={() => handleTimeUpdate(globalIndex)}
                           aria-label={`${video.title} UGC video for ${
                             video.brand
@@ -947,77 +948,114 @@ export default function UGCPortfolio() {
               <div className="flex justify-center gap-8 mb-12 flex-wrap">
                 {featuredVideos.map((video, index) => {
                   const globalIndex = introVideos.length + index;
+                  const youtubeId = getYoutubeId(video.videoUrl);
+                  const isYoutube = !!youtubeId;
+
                   return (
                     <article
                       key={`featured-${index}`}
-                      className="group cursor-pointer max-w-xs mx-auto"
+                      className="group cursor-pointer w-full min-w-[14rem] max-w-xs mx-auto"
                     >
-                      <div className="relative aspect-[9/16] bg-black rounded-3xl overflow-hidden mb-6 group-hover:scale-[1.02] transition-transform duration-500">
-                        <video
-                          ref={(el) => {
-                            videoRefs.current[globalIndex] = el;
-                          }}
-                          src={video.videoUrl}
-                          poster={(video as any).poster}
-                          className="w-full h-full object-cover pointer-events-none"
-                          playsInline
-                          preload="metadata"
-                          onEnded={() => setPlayingVideo(null)}
-                          onError={(e) => {
-                            const v = e.currentTarget;
-                            console.warn("[Video load error]", v.src, v.error?.code, v.error?.message);
-                          }}
-                          onTimeUpdate={() => handleTimeUpdate(globalIndex)}
-                          aria-label={`${video.title} UGC video for ${
-                            video.brand
-                          } [${(video as any).language}]`}
-                        />
-                        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
-                        <div
-                          className="absolute inset-0 z-20 flex items-center justify-center transition-opacity duration-300 cursor-pointer"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            const card = e.currentTarget.closest("article");
-                            const video = card?.querySelector("video");
-                            handlePlayPauseClick(globalIndex, video ?? undefined);
-                          }}
-                        >
-                          {playingVideo !== globalIndex ? (
-                            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-100 group-hover:opacity-100 pointer-events-none">
-                              <Play
-                                className="w-8 h-8 text-white ml-1"
-                                aria-hidden="true"
-                              />
-                            </div>
-                          ) : (
-                            <div className="w-20 h-20 flex items-center justify-center opacity-0 pointer-events-none">
-                              <Pause
-                                className="w-8 h-8 text-white"
-                                aria-hidden="true"
-                              />
-                            </div>
-                          )}
-                        </div>
-                        {playingVideo === globalIndex && (
-                          <div
-                            ref={(el) => {
-                              progressBarRefs.current[globalIndex] = el;
-                            }}
-                            className="absolute bottom-2 left-4 right-4 h-6 z-20 cursor-pointer"
-                            onMouseDown={(e) => handleMouseDown(e, globalIndex)}
-                          >
-                            <div className="relative flex h-full w-full items-center">
-                              <div className="h-1.5 w-full rounded-full bg-white/30">
-                                <div
-                                  className="relative h-full rounded-full bg-white"
-                                  style={{ width: `${videoProgress}%` }}
+                      <div className="relative w-full aspect-[9/16] bg-black rounded-3xl overflow-hidden mb-6 group-hover:scale-[1.02] transition-transform duration-500">
+                        {isYoutube ? (
+                          <>
+                            <div
+                              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                              style={{
+                                backgroundImage: `url(${(video as any).poster})`,
+                              }}
+                            />
+                            {playingVideo === globalIndex ? (
+                              <>
+                                <iframe
+                                  className="absolute inset-0 w-full h-full z-30"
+                                  src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1`}
+                                  title={video.title}
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowFullScreen
+                                />
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setPlayingVideo(null);
+                                  }}
+                                  className="absolute top-4 right-4 z-40 w-10 h-10 rounded-full bg-black/60 hover:bg-black/80 flex items-center justify-center text-white"
+                                  aria-label="Chiudi video"
                                 >
-                                  <div className="absolute right-0 top-1/2 h-3.5 w-3.5 -translate-y-1/2 translate-x-1/2 rounded-full bg-white shadow-lg"></div>
+                                  <X className="w-5 h-5" />
+                                </button>
+                              </>
+                            ) : null}
+                            <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                            <div
+                              className="absolute inset-0 z-20 flex items-center justify-center transition-opacity duration-300 cursor-pointer"
+                              onClick={() => setPlayingVideo(playingVideo === globalIndex ? null : globalIndex)}
+                            >
+                              {playingVideo !== globalIndex ? (
+                                <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-100 group-hover:opacity-100 pointer-events-none">
+                                  <Play className="w-8 h-8 text-white ml-1" aria-hidden="true" />
+                                </div>
+                              ) : null}
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <video
+                              ref={(el) => {
+                                videoRefs.current[globalIndex] = el;
+                              }}
+                              src={video.videoUrl}
+                              poster={(video as any).poster}
+                              className="w-full h-full object-cover pointer-events-none"
+                              playsInline
+                              preload="metadata"
+                              onEnded={() => setPlayingVideo(null)}
+                              onTimeUpdate={() => handleTimeUpdate(globalIndex)}
+                              aria-label={`${video.title} UGC video for ${video.brand} [${(video as any).language}]`}
+                            />
+                            <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                            <div
+                              className="absolute inset-0 z-20 flex items-center justify-center transition-opacity duration-300 cursor-pointer"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                const card = e.currentTarget.closest("article");
+                                const videoEl = card?.querySelector("video");
+                                handlePlayPauseClick(globalIndex, videoEl ?? undefined);
+                              }}
+                            >
+                              {playingVideo !== globalIndex ? (
+                                <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-100 group-hover:opacity-100 pointer-events-none">
+                                  <Play className="w-8 h-8 text-white ml-1" aria-hidden="true" />
+                                </div>
+                              ) : (
+                                <div className="w-20 h-20 flex items-center justify-center opacity-0 pointer-events-none">
+                                  <Pause className="w-8 h-8 text-white" aria-hidden="true" />
+                                </div>
+                              )}
+                            </div>
+                            {playingVideo === globalIndex && (
+                              <div
+                                ref={(el) => {
+                                  progressBarRefs.current[globalIndex] = el;
+                                }}
+                                className="absolute bottom-2 left-4 right-4 h-6 z-20 cursor-pointer"
+                                onMouseDown={(e) => handleMouseDown(e, globalIndex)}
+                              >
+                                <div className="relative flex h-full w-full items-center">
+                                  <div className="h-1.5 w-full rounded-full bg-white/30">
+                                    <div
+                                      className="relative h-full rounded-full bg-white"
+                                      style={{ width: `${videoProgress}%` }}
+                                    >
+                                      <div className="absolute right-0 top-1/2 h-3.5 w-3.5 -translate-y-1/2 translate-x-1/2 rounded-full bg-white shadow-lg" />
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </div>
+                            )}
+                          </>
                         )}
                         <div className="absolute top-6 left-6 z-10 pointer-events-none">
                           <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 font-medium">
@@ -1034,12 +1072,8 @@ export default function UGCPortfolio() {
                         </div>
                         <div className="absolute bottom-6 left-6 right-6 z-10 pointer-events-none">
                           <div className="text-white">
-                            <div className="font-semibold text-lg">
-                              {video.title}
-                            </div>
-                            <div className="text-sm opacity-80">
-                              {video.brand}
-                            </div>
+                            <div className="font-semibold text-lg">{video.title}</div>
+                            <div className="text-sm opacity-80">{video.brand}</div>
                           </div>
                         </div>
                       </div>
@@ -1068,10 +1102,6 @@ export default function UGCPortfolio() {
                           playsInline
                           preload="metadata"
                           onEnded={() => setPlayingVideo(null)}
-                          onError={(e) => {
-                            const v = e.currentTarget;
-                            console.warn("[Video load error]", v.src, v.error?.code, v.error?.message);
-                          }}
                           onTimeUpdate={() => handleTimeUpdate(globalIndex)}
                           aria-label={`${video.title} UGC video for ${
                             video.brand
